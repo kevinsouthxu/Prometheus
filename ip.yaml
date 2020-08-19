@@ -1,0 +1,24 @@
+upstream prome {
+    server    192.168.10.55;
+    server    192.168.10.56;
+}
+
+server {
+        listen 80;
+        server_name prome.dogotsn.com;
+        access_log /data/logs/nginx/prome.dogotsn.access.log;
+        error_log /data/logs/nginx/prome.dogotsn.error.log;
+
+        location / {
+
+            proxy_set_header X-Forwarded-For $remote_addr;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header Host $host;
+                proxy_redirect off;
+                proxy_read_timeout 600;
+                proxy_connect_timeout 600;
+                        proxy_pass http://prome;
+                }
+
+        }
